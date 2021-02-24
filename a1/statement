@@ -12,7 +12,7 @@ Compilation command: gcc -O0 ...
 
 2. Submit a report on:
 
-(i) The speedup and efficiency of both parallel versions for 2, 4, 8 threads for N=10^3, N=10^6, and N=10^9 numbers.
+(i) The speedup and efficiency of both parallel versions for 2, 4, 8 threads for N=10^3, N=10^5, and N=10^7 numbers.
 
 (ii) Does the speedup follow Amdahl's law?
 

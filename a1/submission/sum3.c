@@ -27,7 +27,10 @@ time.
 #include <stdio.h>
 #include <stdlib.h>
 
+#define MAX(a, b) ((a) > (b) ? (a) : (b))
+
 int main(int argc, char *argv[]) {
+    double global_start_time = omp_get_wtime();
     long long sum = 0;
     int *a;
     long long *b;
@@ -42,9 +45,6 @@ int main(int argc, char *argv[]) {
         NUM_THREADS = atoi(argv[2]);
     }
 
-    printf("N \t\t= %d\n", N);
-    printf("NUM_THREADS \t= %d\n", NUM_THREADS);
-
     a = (int *)malloc(sizeof(int) * N);
     b = (long long *)malloc(sizeof(long long) * NUM_THREADS);
 
@@ -55,7 +55,7 @@ int main(int argc, char *argv[]) {
     int depth = -1;
     do {
         ++depth;
-#pragma omp parallel num_threads(NUM_THREADS / (1 << depth))
+#pragma omp parallel num_threads(MAX(1, NUM_THREADS >> depth))
         {
             if (depth == 0) {
                 {
@@ -81,11 +81,16 @@ int main(int argc, char *argv[]) {
 
     sum = b[0];
     double end_time = omp_get_wtime();
-    printf("time taken\t= %lf\n", end_time - start_time);
-    printf("sum\t\t= %lld\n", sum);
-
+    
     free(a);
     free(b);
+    
+    printf("--------------------------------\n");
+    printf("N\t\t= %d\n", N);
+    printf("number of threads\t= %d\n", NUM_THREADS);
+    printf("parallel time\t= %lf\n", end_time - start_time);
+    printf("total time\t= %lf\n", end_time - global_start_time);
+    printf("sum\t\t= %lld\n", sum);
 
     return 0;
 }

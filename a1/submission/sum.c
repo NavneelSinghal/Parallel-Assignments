@@ -28,6 +28,7 @@ time.
 #include <stdlib.h>
 
 int main(int argc, char *argv[]) {
+    double global_start_time = omp_get_wtime();
     long long sum = 0;
     int *a;
 
@@ -41,10 +42,6 @@ int main(int argc, char *argv[]) {
         NUM_THREADS = atoi(argv[2]);
     }
 
-    printf("--------------------------------\n");
-    printf("N \t\t= %d\n", N);
-    printf("NUM_THREADS \t= %d\n", NUM_THREADS);
-
     a = (int *)malloc(sizeof(int) * N);
 
     a[0] = 1;
@@ -53,11 +50,15 @@ int main(int argc, char *argv[]) {
     double start_time = omp_get_wtime();
     for (int i = 0; i < N; ++i) sum += a[i];
     double end_time = omp_get_wtime();
-    
-    printf("time elapsed\t= %lf\n", end_time - start_time);
-    printf("sum\t\t= %lld\n", sum);
 
     free(a);
+
+    printf("--------------------------------\n");
+    printf("N\t\t= %d\n", N);
+    printf("number of threads\t= %d\n", NUM_THREADS);
+    printf("parallel time\t= %lf\n", end_time - start_time);
+    printf("total time\t= %lf\n", end_time - global_start_time);
+    printf("sum\t\t= %lld\n", sum);
 
     return 0;
 }
